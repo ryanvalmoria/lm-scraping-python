@@ -15,7 +15,7 @@ demonstrated/proven impractical or semi-impossible for the exam duration, the sc
 tool should run on command line and headless.
 The scraped-off information should be in XLS format.
 
-
+## Prerequisites:
 1. Clone the repo:
 ```
 git clone https://github.com/ryanvalmoria/lm-scraping-python.git
@@ -45,7 +45,7 @@ sudo apt-get install python3-pandas
 ```
 
 
-
+## Running the script:
 To run the web scraping script in terminal or command line:
 ```
 python3 scraper.py
