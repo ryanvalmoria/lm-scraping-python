@@ -25,21 +25,23 @@ git clone https://github.com/ryanvalmoria/lm-scraping-python.git
 ```
 sudo apt update
 sudo apt install python3
+sudo apt install python3-pip
+
 ```
 
 3. Install Selenium
 ```
-npm install puppeteer
+sudo pip3 install selenium
 ```
 
 4. Install BeautifulSoup
 ```
-npm install xlsx
+sudo apt install python3-bs4
 ```
 
 5. Install Pandas
 ```
-npm install
+sudo apt-get install python3-pandas
 ```
 
 
