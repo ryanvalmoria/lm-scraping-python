@@ -28,6 +28,9 @@ timeout = 5
 jobTitles = []
 jobDescriptions = []
 jobLinks = []
+jobResponsibilities = []
+jobRequirements = []
+rawDetails = []
   
 
 try:
@@ -39,7 +42,7 @@ finally:
     print("Page loaded")
 
 
-soup = BeautifulSoup(driver.page_source, "lxml")
+soup = BeautifulSoup(driver.page_source, "html.parser")
 
 #get all jobTitles
 elements =  soup.select('.job_list_title_cont label')
@@ -57,38 +60,53 @@ for element in elements:
 elements =  soup.select('.apply-btn-')
 for element in elements:
     jobLinks.append(element['href']);
+
     print(element['href'], end="\n")
-    # parent_window = driver.current_window_handle
-    # driver.execute_script('window.open(arguments[0]);', element['href'])
-    # all_windows = driver.window_handles
-    # child_window = [window for window in all_windows if window != parent_window][0]
-    # driver.switch_to.window(child_window)
-    # timeout = 5
 
-   
+    #version 2
+    driver.switch_to.window(driver.window_handles[-1])
+    driver.get(element['href'])
+    timeout = 5
 
 
-    # try:
-    #     element_present = EC.presence_of_element_located((By.CLASS_NAME, 'js-job-single'))
-    #     WebDriverWait(driver, timeout).until(element_present)
-    # except TimeoutException:
-    #     print("Timed out waiting for page to load")
-    # finally:
-    #     print("NEW Page loaded")
+    try:
+        element_present = EC.presence_of_element_located((By.CLASS_NAME, 'jobs-single__head'))
+        WebDriverWait(driver, timeout).until(element_present)
+    except TimeoutException:
+        print("Timed out waiting for page to load")
+        jobResponsibilities.append('N/A')
+        jobRequirements.append('N/A')
+    finally:
+        print("NEW Page loaded")
 
-    # new_soup = BeautifulSoup(driver.page_source, "lxml")
-    # headings =  new_soup.select('h1.jobs-single__title')
-    # print("ryan start -----")
-    # for h in headings:
-    #     print(h)
-    
-    # print("ryan end -----")
- 
+    new_soup = BeautifulSoup(driver.page_source, "html.parser")
+
+    #remove first the Apply Button
+    divRemove = new_soup.find_all('div', class_='jobs-single__btn')
+    for div in divRemove:
+        div.extract()
+
+    #extract the raw details and append to array
+    jobDetails =  new_soup.select('div.jobs-single__content')
+    rawDetails.append(jobDetails);
+
+
+    #extract the requirements
+    #Find all ul tags within the identified div
+    for detail in jobDetails:
+        ul_tags_within_div = detail.find_all('ul')
+
+        if len(ul_tags_within_div) == 2:
+            jobResponsibilities.append(ul_tags_within_div[0])
+            jobRequirements.append(ul_tags_within_div[1])
+        else:
+            jobResponsibilities.append('N/A')
+            jobRequirements.append('N/A')
 
 
 driver.quit()
 
-
-df = pd.DataFrame({'jobTitle': jobTitles, 'jobDescription': jobDescriptions, 'jobLink': jobLinks})
-df.to_csv('lmphJobsPython.csv', index=False);
+print(len(jobTitles), len(jobDescriptions), len(jobLinks), len(jobResponsibilities), len(jobRequirements), len(rawDetails))
+df = pd.DataFrame({'Job Title': jobTitles, 'Job Description': jobDescriptions, 'Job Links': jobLinks, 'Job Responsibilities': jobResponsibilities, 'Job Requirements': jobRequirements, 'Raw Details': rawDetails})
+df.to_excel('lmphJobsPython.xlsx', index=False);
 print(df)
