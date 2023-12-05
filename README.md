@@ -29,17 +29,17 @@ sudo apt install python3-pip
 
 ```
 
-3. Install Selenium
+3. Install Selenium - used to interact with a webpage in a dynamic way
 ```
 sudo pip3 install selenium
 ```
 
-4. Install BeautifulSoup
+4. Install BeautifulSoup - used for parsing html / xml files
 ```
 sudo apt install python3-bs4
 ```
 
-5. Install Pandas
+5. Install Pandas - used for saving the scraped data into an excel file
 ```
 sudo apt-get install python3-pandas
 ```
